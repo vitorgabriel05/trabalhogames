@@ -13,8 +13,17 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;   // layer "Ground" (plataformas)
 
     private Rigidbody2D rb;
+    
+    private Animator anim;
+
     private float horizontalInput;
     private bool isGrounded;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
+    }
 
     private void Awake()
     {
