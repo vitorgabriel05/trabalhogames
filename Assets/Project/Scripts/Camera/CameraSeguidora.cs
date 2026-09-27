@@ -2,37 +2,45 @@ using UnityEngine;
 
 public class CameraSeguidora : MonoBehaviour
 {
-    [Header("Referência")]
-    public Transform player;
+    [Header("Alvo")]
+    [SerializeField] private Transform player;
 
-    [Header("Configuração")]
-    public float velocidadeSuavizacao = 5f;
-    public float offsetY = 2f; // mantém o player um pouco abaixo do centro da tela
+    [Header("Movimento")]
+    [SerializeField] private float smoothSpeed = 5f;
+    [SerializeField] private float offsetY = 1f; // câmera um pouco acima do player
 
-    private float alturaMaxima;
+    [Header("Limite de descida")]
+    [SerializeField] private float maxDescentBelowPeak = 6f; // quanto a câmera pode "afundar" abaixo do pico já alcançado
 
-    void Start()
+    private float highestY; // maior altura (pico) já alcançada pela câmera
+
+    private void Start()
     {
-        alturaMaxima = transform.position.y;
+        highestY = transform.position.y;
     }
 
-    void LateUpdate()
+    private void LateUpdate()
     {
         if (player == null) return;
 
-        // A câmera só sobe, nunca desce (característica de jogo de torre)
-        if (player.position.y + offsetY > alturaMaxima)
+        float rawTargetY = player.position.y + offsetY;
+
+        // Atualiza o pico se o player subiu mais do que a câmera já esteve
+        if (rawTargetY > highestY)
         {
-            alturaMaxima = player.position.y + offsetY;
+            highestY = rawTargetY;
         }
 
-        Vector3 posAlvo = new Vector3(transform.position.x, alturaMaxima, transform.position.z);
-        transform.position = Vector3.Lerp(transform.position, posAlvo, velocidadeSuavizacao * Time.deltaTime);
+        // A câmera segue o player pra baixo, mas nunca abaixo de (pico - margem)
+        float clampedTargetY = Mathf.Max(rawTargetY, highestY - maxDescentBelowPeak);
+
+        Vector3 targetPosition = new Vector3(transform.position.x, clampedTargetY, transform.position.z);
+        transform.position = Vector3.Lerp(transform.position, targetPosition, smoothSpeed * Time.deltaTime);
     }
 
-    // Outros scripts (como o GameManager) podem consultar até onde a câmera já subiu
+    // Usado pelo GameManager para saber a maior altura já alcançada (ex: pontuação)
     public float ObterAlturaMaxima()
     {
-        return alturaMaxima;
+        return highestY;
     }
 }
