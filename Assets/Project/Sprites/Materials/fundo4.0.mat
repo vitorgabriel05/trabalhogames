@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Imagem do ChatGPT 27 de set. de 2026, 10_29_59 1
-  m_Shader: {fileID: 10752, guid: 0000000000000000f000000000000000, type: 0}
+  m_Name: fundo4.0
+  m_Shader: {fileID: 4800000, guid: 4e90a8289da1f3943885176e4f83e35c, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -24,7 +24,7 @@ Material:
     serializedVersion: 3
     m_TexEnvs:
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: 5d39c3bb8f8c1b14e98b9bb6416de844, type: 3}
+        m_Texture: {fileID: 2800000, guid: 896f896626f2ba8469be6fdac152f2ce, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MaskTex:
