@@ -7,94 +7,127 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float speed = 6f;
     [SerializeField] private float jumpForce = 12f;
 
+    [Header("Pulo")]
+    [SerializeField] private int maxJumps = 2;
+
     [Header("Detecção de chão")]
-    [SerializeField] private Transform groundCheck;   // objeto vazio na base do player
+    [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius = 0.15f;
-    [SerializeField] private LayerMask groundLayer;   // layer "Ground" (plataformas)
+    [SerializeField] private LayerMask groundLayer;
 
     private Rigidbody2D rb;
-    
     private Animator anim;
-    private float facingDirection = 1f;
+    private SpriteRenderer spriteRenderer;
 
     private float horizontalInput;
+
     private bool isGrounded;
     private bool isJumping;
+    private bool isRunning;
 
-    void Start()
-    {
-        rb = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
-        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
-        if (spriteRenderer != null)
-        {
-            spriteRenderer.flipX = false;
-        }
-        facingDirection = transform.localScale.x < 0f ? -1f : 1f;
-    }
+    private int jumpCount;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        anim = GetComponent<Animator>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     private void Update()
     {
-        // Leitura do input sempre no Update (mais responsivo)
+        // =========================
+        // MOVIMENTO
+        // =========================
+
         horizontalInput = Input.GetAxisRaw("Horizontal");
-        // Vira também no ar e mantém a direção ao soltar o movimento.
-        if (horizontalInput != 0f)
+
+        isRunning = Mathf.Abs(horizontalInput) > 0.01f;
+
+        anim.SetBool("correr", isRunning);
+
+        // Vira o personagem
+        if (horizontalInput > 0f)
         {
-            facingDirection = horizontalInput < 0f ? -1f : 1f;
+            spriteRenderer.flipX = false;
+        }
+        else if (horizontalInput < 0f)
+        {
+            spriteRenderer.flipX = true;
         }
 
-        anim.SetBool("correr", horizontalInput != 0f);
+        // =========================
+        // DETECÇÃO DE CHÃO
+        // =========================
 
-        // Checagem de chão
-        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        isGrounded = Physics2D.OverlapCircle(
+            groundCheck.position,
+            groundCheckRadius,
+            groundLayer
+        );
 
-        // Mantém o pulo ativo até aterrissar, sem cancelar no início da subida.
+        // Quando aterrissa, libera novamente os dois pulos
         if (isGrounded && rb.linearVelocity.y <= 0f)
         {
+            jumpCount = 0;
             isJumping = false;
         }
 
-        // Pulo: só se estiver no chão
-        if (Input.GetButtonDown("Jump") && isGrounded)
+        // =========================
+        // PULO / PULO DUPLO
+        // =========================
+
+        if (Input.GetButtonDown("Jump") && jumpCount < maxJumps)
         {
-            rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
+            rb.linearVelocity = new Vector2(
+                rb.linearVelocity.x,
+                jumpForce
+            );
+
+            jumpCount++;
             isJumping = true;
         }
 
-        bool isFalling = !isGrounded && rb.linearVelocity.y < 0f;
+        // =========================
+        // QUEDA
+        // =========================
+
+        bool isFalling =
+            !isGrounded &&
+            rb.linearVelocity.y < 0f;
+
+        // Quando começa a cair, para animação de pulo
         if (isFalling)
         {
             isJumping = false;
         }
 
+        // =========================
+        // ANIMAÇÕES
+        // =========================
+
         anim.SetBool("pular", isJumping);
         anim.SetBool("cair", isFalling);
     }
 
-    private void LateUpdate()
-    {
-        // Aplica a direção após a animação, preservando o tamanho do personagem.
-        Vector3 scale = transform.localScale;
-        scale.x = Mathf.Abs(scale.x) * facingDirection;
-        transform.localScale = scale;
-    }
-
     private void FixedUpdate()
     {
-        // Movimento horizontal, preservando a velocidade vertical (queda/pulo/impulso)
-        rb.linearVelocity = new Vector2(horizontalInput * speed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(
+            horizontalInput * speed,
+            rb.linearVelocity.y
+        );
     }
 
-    // Desenha o raio de detecção de chão na cena, só pra facilitar o ajuste no Editor
     private void OnDrawGizmosSelected()
     {
-        if (groundCheck == null) return;
+        if (groundCheck == null)
+            return;
+
         Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
+
+        Gizmos.DrawWireSphere(
+            groundCheck.position,
+            groundCheckRadius
+        );
     }
 }
