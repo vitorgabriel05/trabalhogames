@@ -111,6 +111,17 @@ public class PlayerController : MonoBehaviour
         anim.SetBool("cair", isFalling);
     }
 
+    public void Bounce(float speed)
+    {
+        rb.linearVelocity = new Vector2(rb.linearVelocity.x, speed);
+        jumpCount = 1;
+        isGrounded = false;
+        isJumping = true;
+        anim.SetBool("pular", true);
+        anim.SetBool("puloduplo", false);
+        anim.SetBool("cair", false);
+    }
+
     private void FixedUpdate()
     {
         rb.linearVelocity = new Vector2(
