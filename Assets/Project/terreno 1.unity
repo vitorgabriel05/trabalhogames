@@ -603,7 +603,7 @@ GameObject:
   - component: {fileID: 446637226}
   - component: {fileID: 446637228}
   - component: {fileID: 446637227}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Tilemap 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -623,7 +623,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1980209609}
+  m_Father: {fileID: 1899487385}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!483693784 &446637227
 TilemapRenderer:
@@ -5601,6 +5601,7 @@ Transform:
   - {fileID: 1277978850}
   - {fileID: 1110633040}
   - {fileID: 783669128}
+  - {fileID: 446637226}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1974119110
@@ -5771,8 +5772,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 446637226}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1996494859
