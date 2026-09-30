@@ -11,6 +11,7 @@ AnimatorState:
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
+  - {fileID: -3758291858766328033}
   - {fileID: -4361968301021011762}
   - {fileID: 2139778000596018112}
   m_StateMachineBehaviours: []
@@ -78,32 +79,6 @@ AnimatorStateTransition:
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 1
---- !u!1102 &-4975082715965132313
-AnimatorState:
-  serializedVersion: 6
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Animation_parado
-  m_Speed: 1
-  m_CycleOffset: 0
-  m_Transitions: []
-  m_StateMachineBehaviours: []
-  m_Position: {x: 50, y: 50, z: 0}
-  m_IKOnFeet: 0
-  m_WriteDefaultValues: 1
-  m_Mirror: 0
-  m_SpeedParameterActive: 0
-  m_MirrorParameterActive: 0
-  m_CycleOffsetParameterActive: 0
-  m_TimeParameterActive: 0
-  m_Motion: {fileID: 7400000, guid: ef1b34ec71425ad44a584d3ddc1edc0d, type: 2}
-  m_Tag: 
-  m_SpeedParameter: 
-  m_MirrorParameter: 
-  m_CycleOffsetParameter: 
-  m_TimeParameter: 
 --- !u!1101 &-4361968301021011762
 AnimatorStateTransition:
   m_ObjectHideFlags: 1
@@ -153,9 +128,6 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: 61032497697989570}
     m_Position: {x: 370, y: 250, z: 0}
-  - serializedVersion: 1
-    m_State: {fileID: -4975082715965132313}
-    m_Position: {x: 405, y: 315, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -537,6 +509,7 @@ AnimatorState:
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
+  - {fileID: -3758291858766328033}
   - {fileID: -6769784493389694244}
   - {fileID: 804161195683051586}
   - {fileID: -4289115032655577729}
@@ -566,10 +539,10 @@ AnimatorState:
   m_Speed: 1
   m_CycleOffset: 0
   m_Transitions:
+  - {fileID: -3758291858766328033}
   - {fileID: -6306867318589276745}
   - {fileID: 1361412949749201209}
   - {fileID: 2925197664696690130}
-  - {fileID: -3758291858766328033}
   m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0

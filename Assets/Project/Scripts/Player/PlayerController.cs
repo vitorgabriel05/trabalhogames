@@ -66,7 +66,14 @@ public class PlayerController : MonoBehaviour
             isJumping = true;
         }
 
+        bool isFalling = !isGrounded && rb.linearVelocity.y < 0f;
+        if (isFalling)
+        {
+            isJumping = false;
+        }
+
         anim.SetBool("pular", isJumping);
+        anim.SetBool("cair", isFalling);
     }
 
     private void LateUpdate()
