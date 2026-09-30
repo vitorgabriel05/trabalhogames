@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class PlayerController : MonoBehaviour
@@ -26,16 +27,22 @@ public class PlayerController : MonoBehaviour
     private bool isRunning;
 
     private int jumpCount;
+    private Camera gameCamera;
+    private Collider2D playerCollider;
+    private bool isDead;
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        playerCollider = GetComponent<Collider2D>();
+        gameCamera = Camera.main;
     }
 
     private void Update()
     {
+        if (isDead) return;
         // =========================
         // MOVIMENTO
         // =========================
@@ -113,6 +120,7 @@ public class PlayerController : MonoBehaviour
 
     public void Bounce(float speed)
     {
+        if (isDead) return;
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, speed);
         jumpCount = 1;
         isGrounded = false;
@@ -124,10 +132,36 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (isDead) return;
         rb.linearVelocity = new Vector2(
             horizontalInput * speed,
             rb.linearVelocity.y
         );
+    }
+
+    private void LateUpdate()
+    {
+        if (isDead) return;
+        if (gameCamera == null)
+            gameCamera = Camera.main;
+        if (gameCamera == null) return;
+
+        // Reinicia quando o corpo inteiro sai pelo limite inferior da tela.
+        Vector3 top = playerCollider != null
+            ? new Vector3(playerCollider.bounds.center.x, playerCollider.bounds.max.y, transform.position.z)
+            : transform.position;
+        if (rb.linearVelocity.y < 0f && gameCamera.WorldToViewportPoint(top).y < 0f)
+            Die();
+    }
+
+    public void Die()
+    {
+        if (isDead) return;
+        isDead = true;
+        rb.linearVelocity = Vector2.zero;
+        rb.simulated = false;
+        Time.timeScale = 1f;
+        SceneManager.LoadScene(SceneManager.GetActiveScene().path);
     }
 
     private void OnDrawGizmosSelected()

@@ -1725,6 +1725,7 @@ GameObject:
   - component: {fileID: 593671160}
   - component: {fileID: 593671159}
   - component: {fileID: 593671158}
+  - component: {fileID: 8123456721}
   m_Layer: 0
   m_Name: Serra1
   m_TagString: Untagged
@@ -1732,6 +1733,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8123456721
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 593671157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccb176eb1e084c22bd81fbc32e7b093a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::SawHazard
 --- !u!95 &593671158
 Animator:
   serializedVersion: 7
@@ -2121,6 +2134,7 @@ GameObject:
   - component: {fileID: 774962395}
   - component: {fileID: 774962394}
   - component: {fileID: 774962393}
+  - component: {fileID: 8123456722}
   m_Layer: 0
   m_Name: Serra2
   m_TagString: Untagged
@@ -2128,6 +2142,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8123456722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 774962392}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccb176eb1e084c22bd81fbc32e7b093a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::SawHazard
 --- !u!95 &774962393
 Animator:
   serializedVersion: 7
@@ -2842,6 +2868,7 @@ GameObject:
   - component: {fileID: 1074226708}
   - component: {fileID: 1074226707}
   - component: {fileID: 1074226706}
+  - component: {fileID: 8123456723}
   m_Layer: 0
   m_Name: Serra3
   m_TagString: Untagged
@@ -2849,6 +2876,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &8123456723
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1074226705}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccb176eb1e084c22bd81fbc32e7b093a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::SawHazard
 --- !u!95 &1074226706
 Animator:
   serializedVersion: 7
