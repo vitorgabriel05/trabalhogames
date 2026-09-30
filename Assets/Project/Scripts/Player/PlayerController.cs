@@ -106,7 +106,8 @@ public class PlayerController : MonoBehaviour
         // ANIMAÇÕES
         // =========================
 
-        anim.SetBool("pular", isJumping);
+        anim.SetBool("pular", isJumping && jumpCount == 1);
+        anim.SetBool("puloduplo", isJumping && jumpCount > 1);
         anim.SetBool("cair", isFalling);
     }
 
