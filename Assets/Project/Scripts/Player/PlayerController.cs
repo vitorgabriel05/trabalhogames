@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform groundCheck;
     [SerializeField] private float groundCheckRadius = 0.15f;
     [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip jumpSound;
 
     private Rigidbody2D rb;
     private Animator anim;
@@ -93,6 +95,8 @@ public class PlayerController : MonoBehaviour
 
             jumpCount++;
             isJumping = true;
+
+            audioSource.PlayOneShot(jumpSound);
         }
 
         // =========================
