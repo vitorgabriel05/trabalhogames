@@ -96,7 +96,10 @@ public class PlayerController : MonoBehaviour
             jumpCount++;
             isJumping = true;
 
-            audioSource.PlayOneShot(jumpSound);
+            if (audioSource != null && jumpSound != null)
+            {
+                audioSource.PlayOneShot(jumpSound);
+            }
         }
 
         // =========================
