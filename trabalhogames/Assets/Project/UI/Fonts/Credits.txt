@@ -1,0 +1,4 @@
+Silkscreen Bold — The Silkscreen Project Authors.
+Source: https://github.com/google/fonts/tree/main/ofl/silkscreen
+License: SIL Open Font License 1.1 (see OFL.txt).
+Original font included without modification.
