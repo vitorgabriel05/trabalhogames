@@ -8,14 +8,15 @@ using UnityEngine.SceneManagement;
 public static class HeightHUDValidation
 {
     private const string Stage = "HeightHUDValidation.stage";
-    private const string Key = "HeightRecord.v1.Assets/Project/terreno 1.unity";
+    private const string ScenePath = "Assets/Project/Scenes/TorredasPlataformas.unity";
+    private const string Key = "HeightRecord.v1." + ScenePath;
     static HeightHUDValidation() { EditorApplication.update += Tick; }
     public static void Run()
     {
         SessionState.SetBool("HeightHUDValidation.had", PlayerPrefs.HasKey(Key));
         SessionState.SetInt("HeightHUDValidation.old", PlayerPrefs.GetInt(Key));
         PlayerPrefs.DeleteKey(Key);
-        EditorSceneManager.OpenScene("Assets/Project/terreno 1.unity");
+        EditorSceneManager.OpenScene(ScenePath);
         SessionState.SetInt(Stage, 1);
         EditorApplication.EnterPlaymode();
     }
@@ -60,7 +61,7 @@ public static class HeightHUDValidation
                 hud.enabled = false;
                 Check(PlayerPrefs.GetInt(Key) == 12, "Record saved at attempt end");
                 SessionState.SetInt(Stage, 2);
-                SceneManager.LoadScene("Assets/Project/terreno 1.unity");
+                SceneManager.LoadScene(ScenePath);
             }
             else
             {
