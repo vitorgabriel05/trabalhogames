@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -32,19 +33,27 @@ public class PlayerController : MonoBehaviour
     private Camera gameCamera;
     private Collider2D playerCollider;
     private bool isDead;
+    public bool IsDead => isDead;
+    public const float DeathDuration = PlayerDeathEffect.Duration;
+    // Falling is lethal only below the bottom of the level, never below the camera.
+    [SerializeField, Min(6f)] private float fallDepthBelowStart = 12f;
+    public float FallDeathY { get; private set; }
 
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        rb.collisionDetectionMode = CollisionDetectionMode2D.Continuous;
         anim = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         playerCollider = GetComponent<Collider2D>();
         gameCamera = Camera.main;
+        FallDeathY = transform.position.y - fallDepthBelowStart;
+        if (GetComponent<PauseScreen>() == null) gameObject.AddComponent<PauseScreen>();
     }
 
     private void Update()
     {
-        if (isDead) return;
+        if (MainMenuScreen.IsActive || isDead || PauseScreen.IsPaused) return;
         // =========================
         // MOVIMENTO
         // =========================
@@ -127,7 +136,7 @@ public class PlayerController : MonoBehaviour
 
     public void Bounce(float speed)
     {
-        if (isDead) return;
+        if (MainMenuScreen.IsActive || isDead || PauseScreen.IsPaused) return;
         rb.linearVelocity = new Vector2(rb.linearVelocity.x, speed);
         jumpCount = 1;
         isGrounded = false;
@@ -139,7 +148,7 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (isDead) return;
+        if (MainMenuScreen.IsActive || isDead || PauseScreen.IsPaused) return;
         rb.linearVelocity = new Vector2(
             horizontalInput * speed,
             rb.linearVelocity.y
@@ -148,27 +157,61 @@ public class PlayerController : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (isDead) return;
+        if (MainMenuScreen.IsActive || isDead || PauseScreen.IsPaused) return;
         if (gameCamera == null)
             gameCamera = Camera.main;
-        if (gameCamera == null) return;
-
-        // Reinicia quando o corpo inteiro sai pelo limite inferior da tela.
-        Vector3 top = playerCollider != null
-            ? new Vector3(playerCollider.bounds.center.x, playerCollider.bounds.max.y, transform.position.z)
-            : transform.position;
-        if (rb.linearVelocity.y < 0f && gameCamera.WorldToViewportPoint(top).y < 0f)
-            Die();
+        float topY = playerCollider != null ? playerCollider.bounds.max.y : transform.position.y;
+        if (rb.linearVelocity.y < 0f && topY < FallDeathY)
+            BeginDeath(true);
     }
 
     public void Die()
     {
-        if (isDead) return;
+        BeginDeath(false);
+    }
+
+    private void BeginDeath(bool fellOffScreen)
+    {
+        if (MainMenuScreen.IsActive || isDead || PauseScreen.IsPaused) return;
         isDead = true;
         rb.linearVelocity = Vector2.zero;
         rb.simulated = false;
+        if (playerCollider != null) playerCollider.enabled = false;
+        var limits = GetComponent<PlayerLimite>();
+        if (limits != null) limits.enabled = false;
+        var follow = gameCamera != null ? gameCamera.GetComponent<CameraSeguidora>() : null;
+        if (follow != null) follow.enabled = false;
         Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().path);
+        if (fellOffScreen && gameCamera != null)
+        {
+            // Keep the fall reaction visible just inside the lower edge.
+            Vector3 position = transform.position;
+            position.y = gameCamera.transform.position.y - gameCamera.orthographicSize
+                + spriteRenderer.bounds.extents.y + 0.2f;
+            transform.position = position;
+        }
+        foreach (var source in FindObjectsByType<AudioSource>())
+            if (source.isPlaying) source.Stop();
+        var hud = GetComponent<HeightRecordHUD>();
+        if (hud != null) hud.HideForDeath();
+        StartCoroutine(AnimateDeath());
+    }
+
+    private IEnumerator AnimateDeath()
+    {
+        anim.enabled = false;
+        var effect = GetComponent<PlayerDeathEffect>();
+        if (effect == null) effect = gameObject.AddComponent<PlayerDeathEffect>();
+        effect.Begin(spriteRenderer, gameCamera);
+        float elapsed = 0f;
+        while (elapsed < DeathDuration)
+        {
+            effect.RenderAt(elapsed);
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+        effect.RenderAt(DeathDuration);
+        gameObject.AddComponent<GameOverScreen>().Show();
     }
 
     private void OnDrawGizmosSelected()

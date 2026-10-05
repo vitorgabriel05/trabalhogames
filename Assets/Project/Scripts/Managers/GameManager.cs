@@ -9,9 +9,6 @@ public class GameManager : MonoBehaviour
     public Transform player;
     public CameraSeguidora cameraSeguidora;
 
-    [Header("Configuração")]
-    public float margemQuedaGameOver = 6f; // distância abaixo da câmera até dar game over
-
     [Header("Estado (somente leitura)")]
     public int pontuacao;
     public bool jogoAtivo = true;
@@ -29,7 +26,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (!jogoAtivo) return;
+        if (!jogoAtivo || player == null || cameraSeguidora == null || MainMenuScreen.IsActive || PauseScreen.IsPaused) return;
 
         AtualizarPontuacao();
         VerificarGameOver();
@@ -44,9 +41,8 @@ public class GameManager : MonoBehaviour
 
     void VerificarGameOver()
     {
-        float limiteInferior = cameraSeguidora.transform.position.y - margemQuedaGameOver;
-
-        if (player.position.y < limiteInferior)
+        var controller = player.GetComponent<PlayerController>();
+        if (controller != null && controller.IsDead)
         {
             AcionarGameOver();
         }

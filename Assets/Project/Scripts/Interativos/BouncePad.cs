@@ -5,6 +5,8 @@ public class BouncePad : MonoBehaviour
 {
     [SerializeField, Min(0.1f)] private float bounceSpeed = 18f;
     [SerializeField] private Sprite idleSprite;
+    [SerializeField] private Vector2 surfaceSize;
+    [SerializeField] private Vector2 surfaceOffset;
 
     private Animator anim;
     private SpriteRenderer spriteRenderer;
@@ -25,8 +27,8 @@ public class BouncePad : MonoBehaviour
             surface = gameObject.AddComponent<BoxCollider2D>();
 
         surface.isTrigger = false;
-        surface.size = idleSprite.bounds.size;
-        surface.offset = idleSprite.bounds.center;
+        surface.size = surfaceSize.x > 0f && surfaceSize.y > 0f ? surfaceSize : (Vector2)idleSprite.bounds.size;
+        surface.offset = surfaceSize.x > 0f && surfaceSize.y > 0f ? surfaceOffset : (Vector2)idleSprite.bounds.center;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

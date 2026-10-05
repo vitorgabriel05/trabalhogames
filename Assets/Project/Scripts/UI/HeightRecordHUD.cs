@@ -9,6 +9,9 @@ public class HeightRecordHUD : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float recordVolume = 0.65f;
     [SerializeField] private Font pixelFont;
 
+    public int Coins { get; private set; }
+    private Text coinText;
+    public void AddCoin() { Coins++; RefreshLabels(); }
     public int Height { get; private set; }
     public int Record { get; private set; }
 
@@ -35,6 +38,8 @@ public class HeightRecordHUD : MonoBehaviour
 
     private void LateUpdate()
     {
+        var player = GetComponent<PlayerController>();
+        if (player != null && player.IsDead) return;
         int current = Mathf.Max(0, Mathf.FloorToInt((transform.position.y - startY) * metersPerUnit));
         if (current != Height)
         {
@@ -61,8 +66,23 @@ public class HeightRecordHUD : MonoBehaviour
         toast.transform.localScale = Vector3.one * (1f + 0.04f * toast.alpha * Mathf.Sin(Time.unscaledTime * 8f));
     }
 
+    public void HideForDeath()
+    {
+        if (hud != null) hud.SetActive(false);
+    }
+
+    public void ResetRecord()
+    {
+        Record = 0;
+        pendingSave = false;
+        PlayerPrefs.DeleteKey(recordKey);
+        PlayerPrefs.Save();
+        RefreshLabels();
+    }
+
     private void RefreshLabels()
     {
+        if (coinText != null) coinText.text = Coins.ToString();
         heightText.text = Height + " m";
         recordText.text = Record + " m";
     }
@@ -115,8 +135,8 @@ public class HeightRecordHUD : MonoBehaviour
         audioSource.spatialBlend = 0f;
 
         var art = hud.AddComponent<PixelHUDArt>();
-        var panel = Rect("Height panel", hud.transform, new Vector2(0, 1), new Vector2(0, 1), new Vector2(24, -40), new Vector2(336, 100));
-        Picture(panel, art.Frame(168, 50, false));
+        var panel = Rect("Height panel", hud.transform, new Vector2(0, 1), new Vector2(0, 1), new Vector2(24, -40), new Vector2(336, 142));
+        Picture(panel, art.Frame(168, 71, false));
         panel.localScale = Vector3.one * 1.1f;
         var trophy = Rect("Trophy", panel, new Vector2(0, 1), new Vector2(0, 1), new Vector2(22, -22), new Vector2(56, 52));
         Picture(trophy, art.Trophy());
@@ -129,6 +149,11 @@ public class HeightRecordHUD : MonoBehaviour
         heightText.resizeTextMinSize = recordText.resizeTextMinSize = 12;
         heightText.resizeTextMaxSize = recordText.resizeTextMaxSize = 22;
 
+        var coinIcon = Rect("Coin icon", panel, new Vector2(0, 1), new Vector2(0, 1), new Vector2(28, -92), new Vector2(32, 38));
+        Picture(coinIcon, Resources.Load<Sprite>("Coins/coin_00"));
+        coinIcon.GetComponent<Image>().preserveAspect = true;
+        Label("Coin label", panel, new Vector2(92, -91), new Vector2(130, 36), "MOEDAS", 20, new Color32(255, 222, 99, 255));
+        coinText = Label("Coins", panel, new Vector2(224, -91), new Vector2(94, 36), "0", 22, new Color32(255, 222, 99, 255));
         var celebration = Rect("New record", hud.transform, new Vector2(0.5f, 1), new Vector2(0.5f, 1), Vector2.zero, Vector2.zero);
         var banner = Rect("Gold banner", celebration, new Vector2(0.5f, 1), new Vector2(0.5f, 1), new Vector2(0, -154), new Vector2(348, 64));
         Picture(banner, art.Frame(174, 32, true));

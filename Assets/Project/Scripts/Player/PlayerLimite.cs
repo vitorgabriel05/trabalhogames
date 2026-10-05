@@ -1,25 +1,22 @@
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class PlayerMorte : MonoBehaviour
 {
-    [SerializeField] private float margem = 3f; // folga abaixo da tela antes de morrer
-    private Camera cam;
+    private PlayerController player;
     private bool morto;
 
     void Start()
     {
-        cam = Camera.main;
+        player = GetComponent<PlayerController>();
     }
 
     void Update()
     {
-        if (morto) return;
-
-        // borda inferior da câmera no mundo (ortográfica 2D)
-        float bordaInferior = cam.transform.position.y - cam.orthographicSize;
-
-        if (transform.position.y < bordaInferior - margem)
+        if (morto || player == null || player.IsDead || MainMenuScreen.IsActive || PauseScreen.IsPaused) return;
+        var body = GetComponent<Rigidbody2D>();
+        var shape = GetComponent<Collider2D>();
+        float topY = shape != null ? shape.bounds.max.y : transform.position.y;
+        if (body != null && body.linearVelocity.y < 0f && topY < player.FallDeathY)
         {
             Morrer();
         }
@@ -28,8 +25,7 @@ public class PlayerMorte : MonoBehaviour
     void Morrer()
     {
         morto = true;
-        // opção simples: reiniciar a fase
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        player.Die();
     }
 }
 

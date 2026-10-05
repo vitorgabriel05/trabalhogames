@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Project/Scenes/Menu.unity
+    guid: fdf6b62deaa6d834f924c3c43c62277e
+  - enabled: 1
     path: Assets/Project/Scenes/TorredasPlataformas.unity
     guid: 58011bd2b1bd5a64a92d23d55679e6c9
   - enabled: 1
