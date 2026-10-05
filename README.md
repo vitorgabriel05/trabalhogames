@@ -2,10 +2,10 @@
 
 ## Como testar
 
-1. Clone este repositorio e selecione a branch `feature/plataformas-e-obstaculos`:
+1. Clone este repositorio e selecione a branch `main`:
 
    ```sh
-   git clone --branch feature/plataformas-e-obstaculos https://github.com/vitorgabriel05/trabalhogames.git
+   git clone --branch main https://github.com/vitorgabriel05/trabalhogames.git
    ```
 
 2. No Unity Hub, adicione a pasta do projeto e abra com **Unity 6000.5.8f1**.
