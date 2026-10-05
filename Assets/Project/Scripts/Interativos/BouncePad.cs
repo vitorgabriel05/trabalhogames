@@ -1,20 +1,24 @@
 using UnityEngine;
 
-[RequireComponent(typeof(SpriteRenderer), typeof(Animator))]
+[RequireComponent(typeof(SpriteRenderer), typeof(Animator), typeof(AudioSource))]
 public class BouncePad : MonoBehaviour
 {
     [SerializeField, Min(0.1f)] private float bounceSpeed = 18f;
     [SerializeField] private Sprite idleSprite;
-
+    [Header("Áudio")]
+    [SerializeField] private AudioClip bounceSound;
     private Animator anim;
     private SpriteRenderer spriteRenderer;
     private BoxCollider2D surface;
+    private AudioSource audioSource;
     private float nextBounceTime;
 
     private void Awake()
     {
         anim = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        audioSource = GetComponent<AudioSource>();
+        audioSource.playOnAwake = false;
         if (idleSprite == null)
             idleSprite = spriteRenderer.sprite;
 
@@ -58,6 +62,11 @@ public class BouncePad : MonoBehaviour
                 continue;
 
             player.Bounce(bounceSpeed);
+
+            if (audioSource != null && bounceSound != null)
+            {
+                audioSource.PlayOneShot(bounceSound);
+            }
             nextBounceTime = Time.time + 0.1f;
             anim.enabled = true;
             anim.Play("Base Layer.New Animation", 0, 0f);

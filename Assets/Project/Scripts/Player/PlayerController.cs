@@ -17,7 +17,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private AudioClip jumpSound;
-
+    [SerializeField] private AudioClip deathSound;
+    [SerializeField] private float deathDelay = 1f;
     private Rigidbody2D rb;
     private Animator anim;
     private SpriteRenderer spriteRenderer;
@@ -160,14 +161,25 @@ public class PlayerController : MonoBehaviour
 
     public void Die()
     {
-        if (isDead) return;
-        isDead = true;
-        rb.linearVelocity = Vector2.zero;
-        rb.simulated = false;
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().path);
+    if (isDead) return;
+
+    isDead = true;
+
+    rb.linearVelocity = Vector2.zero;
+    rb.simulated = false;
+
+    if (audioSource != null && deathSound != null)
+    {
+        audioSource.PlayOneShot(deathSound);
     }
 
+    Invoke(nameof(ReiniciarCena), deathDelay);
+    }
+    private void ReiniciarCena()
+{
+    Time.timeScale = 1f;
+    SceneManager.LoadScene(SceneManager.GetActiveScene().path);
+}
     private void OnDrawGizmosSelected()
     {
         if (groundCheck == null)
