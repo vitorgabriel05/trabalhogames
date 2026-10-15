@@ -17,6 +17,8 @@ O menu inclui recorde de altura e volumes independentes de musica e sons. A part
 
 Para atualizar uma copia existente, salve suas alteracoes locais antes de trocar de branch e executar `git pull`.
 
+O video de introducao usa Git LFS por ultrapassar 100 MB. Instale o Git LFS e execute `git lfs install` e `git lfs pull` depois de clonar ou atualizar a branch, antes de abrir o Unity.
+
 ## Build Windows
 
 As pastas `Builds`, `Library` e `Logs` sao locais e nao estao no repositorio. Para gerar um executavel, use a configuracao de build do Unity com `Menu` como primeira cena e `TorredasPlataformas` como segunda. Compartilhe a pasta completa do build, incluindo os arquivos ao lado do `.exe`.
