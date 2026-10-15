@@ -107,6 +107,7 @@ public static class UpperTowerSetup
         Visual("Mastro do topo", new Vector3(1.6f, 297f, 0), new Vector2(.1f, 2.4f), Color.white);
         Visual("Bandeira do topo", new Vector3(2.2f, 297.65f, 0), new Vector2(1.2f, .65f), new Color(.5f, 1f, .4f));
         var last = root.GetComponentsInChildren<Transform>().Single(t => t.name == "Rota descanso 53");
+        last.gameObject.AddComponent<TowerEnding>();
         Coin(last, new Vector3(-.8f, .9f, 0), "Moeda do topo A");
         Coin(last, new Vector3(0, .9f, 0), "Moeda do topo B");
         Coin(last, new Vector3(.8f, .9f, 0), "Moeda do topo C");
@@ -179,6 +180,9 @@ public static class UpperTowerSetup
         if (extension.GetComponentsInChildren<TextMesh>().Length != 0) throw new InvalidOperationException("Textos na torre");
         var route = platforms.Where(b => b.name.StartsWith("Rota ")).OrderBy(b => b.transform.position.y).ToArray();
         if (route.Length != 54) throw new InvalidOperationException("Rota principal incompleta");
+        var ending = route[route.Length - 1].GetComponent<TowerEnding>();
+        if (ending == null || route[route.Length - 1].isTrigger)
+            throw new InvalidOperationException("Gatilho de encerramento ausente no apoio final");
         for (int i = 1; i < route.Length; i++)
             if (route[i].transform.position.y - route[i-1].transform.position.y > 3.3f ||
                 Mathf.Abs(route[i].transform.position.x - route[i-1].transform.position.x) > 3.1f)
